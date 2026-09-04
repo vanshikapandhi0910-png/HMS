@@ -324,11 +324,11 @@ export const INITIAL_REVIEWS = [
 ];
 
 export const INITIAL_SAMPLE_PATIENTS = [
-  { id: "PAT-1001", name: "Aarav Kumar", age: 45, gender: "Male", room: "General Ward - Bed 14", doctorAssigned: "Dr. Arvind Swamy", condition: "Post-Angioplasty Monitoring", status: "Admitted" },
-  { id: "PAT-1002", name: "Suman Lata", age: 62, gender: "Female", room: "AC Private - Room 204", doctorAssigned: "Dr. Rajeshwar Sharma", condition: "Total Knee Replacement", status: "Admitted" },
-  { id: "PAT-1003", name: "Vikram Malhotra", age: 38, gender: "Male", room: "ICU - Bed 03", doctorAssigned: "Dr. Meera Nambiar", condition: "Acute Ischemic Stroke", status: "Critical Care" },
-  { id: "PAT-1004", name: "Neha Saxena", age: 29, gender: "Female", room: "Non-AC Room - 302", doctorAssigned: "Dr. Kavita Menon", condition: "Maternity Recovery", status: "Admitted" },
-  { id: "PAT-1005", name: "Rohit Bansal", age: 50, gender: "Male", room: "OPD Walk-in", doctorAssigned: "Dr. Ananya Roy", condition: "Severe Eczema Consultation", status: "OPD Patient" }
+  { id: "PAT-1001", name: "Aarav Kumar", age: 45, gender: "Male", room: "General Ward - Bed 14", doctorAssigned: "Dr. Arvind Swamy", doctorSpecialty: "Cardiologist", condition: "Post-Angioplasty Monitoring", status: "Admitted" },
+  { id: "PAT-1002", name: "Suman Lata", age: 62, gender: "Female", room: "AC Private - Room 204", doctorAssigned: "Dr. Kavita Menon", doctorSpecialty: "Gynecologist", condition: "Gynaecological Review & Hormonal Assessment", status: "Admitted" },
+  { id: "PAT-1003", name: "Vikram Malhotra", age: 38, gender: "Male", room: "ICU - Bed 03", doctorAssigned: "Dr. Meera Nambiar", doctorSpecialty: "Neurologist", condition: "Acute Ischemic Stroke", status: "Critical Care" },
+  { id: "PAT-1004", name: "Neha Saxena", age: 29, gender: "Female", room: "Physiotherapy Unit - Room 302", doctorAssigned: "Dr. Sunita Deshmukh", doctorSpecialty: "Physiotherapist", condition: "Post-Operative Physiotherapy Rehabilitation", status: "Admitted" },
+  { id: "PAT-1005", name: "Rohit Bansal", age: 50, gender: "Male", room: "OPD Walk-in", doctorAssigned: "Dr. Ananya Roy", doctorSpecialty: "Dermatologist", condition: "Severe Eczema Consultation", status: "OPD Patient" }
 ];
 
 export const INITIAL_STAFF_MEMBERS = [

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import StylusCanvasNotes from './StylusCanvasNotes';
 import SpecialtyRepertoryModal from './SpecialtyRepertoryModal';
-import InteractiveBodyMap from './InteractiveBodyMap';
+
 import { PHARMACY_MEDICINES } from '../../data/hospitalData';
 
 export default function CaseTakingSuite({
@@ -18,7 +18,7 @@ export default function CaseTakingSuite({
   onShowToast,
   readOnly = false
 }) {
-  const [activeTab, setActiveTab] = useState('demographics'); // 1: demographics, 2: symptoms, 3: bodymap, 4: ai_cds, 5: erx, 6: longitudinal, 7: export
+  const [activeTab, setActiveTab] = useState('demographics'); // 1: demographics, 2: symptoms, 3: ai_cds, 4: erx, 5: longitudinal, 6: export
 
   // Module 1 State: Demographics & Consent
   const [extendedDemographics, setExtendedDemographics] = useState(
@@ -75,13 +75,7 @@ export default function CaseTakingSuite({
     existingRecord?.multimodalNotes?.attachments || ['Baseline_ECG_Report.pdf']
   );
 
-  // Module 3 State: Body Map Pins
-  const [bodyMapPins, setBodyMapPins] = useState(
-    existingRecord?.bodyMapPins || [
-      { id: 'pin-1', part: 'Chest / Thorax', x: 50, y: 30, view: 'front', painLevel: 8, type: 'pain', note: 'Substernal chest tightness radiates to left arm', timestamp: '10:30 AM' },
-      { id: 'pin-2', part: 'Left Arm & Shoulder', x: 72, y: 38, view: 'front', painLevel: 6, type: 'pain', note: 'Inner arm tingling during exertion', timestamp: '10:32 AM' }
-    ]
-  );
+
 
   // Module 4 State: AI CDS & Repertory References
   const [aiDiagnoses, setAiDiagnoses] = useState(
@@ -241,7 +235,7 @@ export default function CaseTakingSuite({
         stylusDrawingData: stylusData,
         attachments
       },
-      bodyMapPins,
+
       aiDifferentialDiagnoses: aiDiagnoses,
       drugAllergyAlerts: allergyAlerts,
       specialtyRepoReferences: specialtyRefs,
@@ -290,16 +284,13 @@ export default function CaseTakingSuite({
 
       {/* Module Navigation Tabs */}
       {(() => {
-        const userSpecialty = currentUser?.specialty || patient?.doctorSpecialty || 'Cardiologist';
-        const isDiagnosticSpecialty = ['pathol', 'radio'].some(s => userSpecialty.toLowerCase().includes(s));
         const navTabs = [
           { id: 'demographics', label: '1. Demographics & Consent', icon: User },
           { id: 'symptoms', label: '2. Symptoms & Multimodal', icon: FileText },
-          ...(!isDiagnosticSpecialty ? [{ id: 'bodymap', label: '3. Interactive Body Map', icon: Activity }] : []),
-          { id: 'ai_cds', label: `${!isDiagnosticSpecialty ? '4' : '3'}. AI CDS & Repertories`, icon: Cpu },
-          { id: 'erx', label: `${!isDiagnosticSpecialty ? '5' : '4'}. eRx & Care Plan`, icon: CheckCircle2 },
-          { id: 'longitudinal', label: `${!isDiagnosticSpecialty ? '6' : '5'}. Longitudinal Timeline`, icon: Clock },
-          { id: 'export', label: `${!isDiagnosticSpecialty ? '7' : '6'}. EHR Interoperability`, icon: Share2 }
+          { id: 'ai_cds', label: '3. AI CDS & Repertories', icon: Cpu },
+          { id: 'erx', label: '4. eRx & Care Plan', icon: CheckCircle2 },
+          { id: 'longitudinal', label: '5. Longitudinal Timeline', icon: Clock },
+          { id: 'export', label: '6. EHR Interoperability', icon: Share2 }
         ];
 
         return (
@@ -670,15 +661,7 @@ export default function CaseTakingSuite({
         </div>
       )}
 
-      {/* ==================== MODULE 3: SPECIALTY-SPECIFIC INTERACTIVE BODY MAP ==================== */}
-      {activeTab === 'bodymap' && (
-        <InteractiveBodyMap
-          specialty={currentUser?.specialty || patient?.doctorSpecialty || 'Cardiologist'}
-          pins={bodyMapPins}
-          onUpdatePins={setBodyMapPins}
-          readOnly={readOnly}
-        />
-      )}
+
 
       {/* ==================== MODULE 4: AI CDS & SPECIALTY REPERTORIES ==================== */}
       {activeTab === 'ai_cds' && (
@@ -1030,7 +1013,7 @@ export default function CaseTakingSuite({
                   patient: patient?.name,
                   chiefComplaints,
                   systemicReview,
-                  bodyMapPins,
+
                   aiDiagnoses,
                   ePrescription: prescriptions,
                   carePlan

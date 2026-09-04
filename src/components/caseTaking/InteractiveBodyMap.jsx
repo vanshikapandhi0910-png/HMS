@@ -58,6 +58,24 @@ const SPECIALTY_MAPS = {
     ],
     svgType: 'ortho'
   },
+  Physiotherapist: {
+    name: 'Full Body Physiotherapy Complaint Map',
+    badge: 'Physiotherapy Full-Body Map',
+    icon: Activity,
+    description: 'Complete anterior & posterior body view for marking pain, stiffness, weakness, and mobility complaints.',
+    parts: [
+      { id: 'physio-1', label: 'Head, Neck & Cervical Region', defaultPin: 'Neck stiffness / Tension headache' },
+      { id: 'physio-2', label: 'Bilateral Shoulder & Upper Arm', defaultPin: 'Frozen Shoulder / Limited ROM' },
+      { id: 'physio-3', label: 'Upper Back & Thoracic Spine', defaultPin: 'Postural Kyphosis / Muscle Spasm' },
+      { id: 'physio-4', label: 'Lower Back & Lumbar-Sacral Region', defaultPin: 'Chronic Low Back Pain / Sciatica' },
+      { id: 'physio-5', label: 'Bilateral Arms, Elbows & Wrists', defaultPin: 'Tennis Elbow / Carpal Tunnel Symptoms' },
+      { id: 'physio-6', label: 'Hip, Pelvis & Groin Area', defaultPin: 'Hip Flexor Tightness / IT Band Syndrome' },
+      { id: 'physio-7', label: 'Bilateral Knees & Lower Legs', defaultPin: 'Patellar Tracking Issue / Shin Splints' },
+      { id: 'physio-8', label: 'Bilateral Ankles, Feet & Arch', defaultPin: 'Plantar Fasciitis / Ankle Instability' },
+      { id: 'physio-9', label: 'Chest, Thorax & Core Muscles', defaultPin: 'Breathing Difficulty / Core Weakness' },
+    ],
+    svgType: 'physiotherapy'
+  },
   General: {
     name: 'General Systemic Anatomical Map',
     badge: 'Clinical Anatomical Map',
@@ -81,13 +99,11 @@ export default function InteractiveBodyMap({
 }) {
   // Normalize specialty name to select specialty map
   const getMapKey = (spec) => {
-    if (!spec) return 'General';
+    if (!spec) return 'Orthopaedic';
     const lower = spec.toLowerCase();
-    if (lower.includes('cardio')) return 'Cardiologist';
-    if (lower.includes('dent')) return 'Dentist';
-    if (lower.includes('derm')) return 'Dermatologist';
-    if (lower.includes('ortho') || lower.includes('physio')) return 'Orthopaedic';
-    return 'General';
+    if (lower.includes('physio')) return 'Physiotherapist';
+    if (lower.includes('ortho')) return 'Orthopaedic';
+    return 'Orthopaedic';
   };
 
   const [activeMapKey, setActiveMapKey] = useState(getMapKey(specialty));
@@ -122,7 +138,7 @@ export default function InteractiveBodyMap({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Specialty Map Header Selector */}
+      {/* Specialty Map Header */}
       <div style={{ background: 'rgba(15, 23, 42, 0.9)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div>
@@ -131,7 +147,7 @@ export default function InteractiveBodyMap({
                 <MapIcon size={14} /> {currentMap.badge}
               </span>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Attending Specialty: <strong style={{ color: '#fff' }}>{specialty || 'General Practice'}</strong>
+                Attending Specialty: <strong style={{ color: '#fff' }}>{specialty || 'Orthopaedic / Physiotherapy'}</strong>
               </span>
             </div>
             <h3 style={{ color: '#fff', fontSize: '1.2rem', margin: 0 }}>
@@ -140,32 +156,6 @@ export default function InteractiveBodyMap({
             <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', margin: '4px 0 0 0' }}>
               {currentMap.description}
             </p>
-          </div>
-
-          {/* Specialty View Switcher */}
-          <div style={{ display: 'flex', gap: '6px', background: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: '10px' }}>
-            {['Cardiologist', 'Dentist', 'Dermatologist', 'Orthopaedic', 'General'].map(key => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => {
-                  setActiveMapKey(key);
-                  setSelectedPartId(SPECIALTY_MAPS[key].parts[0]?.id || '');
-                }}
-                style={{
-                  background: activeMapKey === key ? 'var(--accent-teal)' : 'transparent',
-                  color: activeMapKey === key ? '#fff' : 'var(--text-muted)',
-                  border: 'none',
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  fontSize: '0.75rem',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                {key}
-              </button>
-            ))}
           </div>
         </div>
       </div>
@@ -216,12 +206,12 @@ export default function InteractiveBodyMap({
             </div>
           )}
 
-          {activeMapKey === 'General' && (
+          {activeMapKey === 'Physiotherapist' && (
             <div style={{ textAlign: 'center', width: '100%' }}>
               <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '2px dashed var(--accent-indigo)', padding: '30px', borderRadius: '20px', margin: '0 auto', maxWidth: '340px' }}>
-                <User size={80} color="var(--accent-indigo)" />
-                <h4 style={{ color: '#fff', marginTop: '14px', fontSize: '1.1rem' }}>General Anatomical System</h4>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Head • Thorax • Abdomen • Extremities</p>
+                <Activity size={80} color="var(--accent-indigo)" style={{ animation: 'pulse 2s infinite' }} />
+                <h4 style={{ color: '#fff', marginTop: '14px', fontSize: '1.1rem' }}>Full-Body Physiotherapy Map</h4>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Head & Neck • Shoulders • Spine • Arms • Hips • Knees • Ankles • Core</p>
               </div>
             </div>
           )}

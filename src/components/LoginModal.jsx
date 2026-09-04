@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, User, Key, Shield, ArrowRight, UserCheck } from 'lucide-react';
+import { SPECIALIST_DOCTORS } from '../data/hospitalData';
 import { authApi } from '../api/hospitalApi';
 import { setToken } from '../api/client';
 
@@ -128,10 +129,26 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
         setToken(data.token);
       }
 
+      // Resolve specialty for Doctor accounts from SPECIALIST_DOCTORS data
+      let resolvedSpecialty = data.user?.specialty || '';
+      if (role === 'Doctor' && !resolvedSpecialty) {
+        const docMatch = SPECIALIST_DOCTORS.find(
+          d => d.id.toLowerCase() === trimmedId.toLowerCase()
+        );
+        if (docMatch) {
+          resolvedSpecialty = docMatch.specialty;
+        } else {
+          // Fallback: extract specialty from account name like "Dr. Name (Specialty)"
+          const parenMatch = resolvedName.match(/\(([^)]+)\)/);
+          if (parenMatch) resolvedSpecialty = parenMatch[1];
+        }
+      }
+
       onLoginSuccess({
         id: data.user?.id || trimmedId,
         name: data.user?.name || resolvedName,
         role: data.user?.role || role,
+        ...(resolvedSpecialty ? { specialty: resolvedSpecialty } : {}),
       });
       onClose();
     } catch (err) {

@@ -18,7 +18,20 @@ export default function DoctorPortal({
 }) {
   const [activeTab, setActiveTab] = useState('casetaking');
   const [caseRecords, setCaseRecords] = useState(INITIAL_CASE_RECORDS);
-  const [selectedCasePatient, setSelectedCasePatient] = useState(patientsList?.[0] || null);
+
+  // Filter patients: Radiologist & Pathologist see all; every other doctor sees only their own patients
+  const doctorSpecialty = currentUser?.specialty || '';
+  const isDiagnosticDoctor = ['Pathologist', 'Radiologist'].includes(doctorSpecialty);
+  const visiblePatients = isDiagnosticDoctor
+    ? (patientsList || [])
+    : (patientsList || []).filter(p =>
+        p.doctorSpecialty === doctorSpecialty ||
+        (p.doctorAssigned && currentUser?.name && p.doctorAssigned.toLowerCase().includes(
+          (currentUser.name.replace(/^Dr\.\s*/i, '').split(' ')[0] || '').toLowerCase()
+        ))
+      );
+
+  const [selectedCasePatient, setSelectedCasePatient] = useState(visiblePatients?.[0] || null);
 
   useEffect(() => {
     caseRecordApi.getAll()
@@ -475,13 +488,15 @@ export default function DoctorPortal({
                 <select
                   value={selectedCasePatient?.id || ''}
                   onChange={(e) => {
-                    const pat = patientsList.find(p => p.id === e.target.value);
+                    const pat = visiblePatients.find(p => p.id === e.target.value);
                     setSelectedCasePatient(pat);
                   }}
                   className="input-field"
                   style={{ background: '#0f172a', color: '#fff', padding: '8px 14px', borderRadius: '8px', minWidth: '260px' }}
                 >
-                  {patientsList.map(p => (
+                  {visiblePatients.length === 0 ? (
+                    <option value="">No patients assigned</option>
+                  ) : visiblePatients.map(p => (
                     <option key={p.id} value={p.id}>
                       {p.name} ({p.id}) - {p.status} [{p.condition}]
                     </option>
