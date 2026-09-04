@@ -119,13 +119,14 @@ The app will be available at **http://localhost:5173**.
 
 Click **Login with ID / Role** in the navbar. Credentials auto-fill when you pick a role.
 
-| Role          | User ID  | Password  |
-|---------------|----------|-----------|
-| Admin         | ADM-001  | admin123  |
-| Receptionist  | STF-201  | rec123    |
-| Nurse         | NUR-01   | nurse123  |
-| Doctor        | DOC-101  | doc123    |
-| Patient       | PAT-1001 | pat123    |
+| Role          | User ID  | Password  | Name / Description |
+|---------------|----------|-----------|--------------------|
+| Admin         | ADM-001  | admin123  | Dr. Rajesh Gupta (Chief Admin) |
+| Receptionist  | STF-201  | rec123    | Suresh Gupta (Lead Receptionist) |
+| Receptionist  | STF-202  | rec123    | Priya Sharma (Senior Receptionist) |
+| Nurse         | NUR-01   | nurse123  | Sister Mary Fernandez (Head ICU Nurse) |
+| Doctor        | DOC-101  | doc123    | Dr. Arvind Swamy (Cardiologist) |
+| Patient       | PAT-1001 | pat123    | Aarav Kumar (Patient #1001) |
 
 ---
 

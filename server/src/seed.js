@@ -46,6 +46,7 @@ const DEMO_USERS = [
   // Admin & Staff
   { userId: 'ADM-001', name: 'Dr. Rajesh Gupta (Chief Admin)', role: 'Admin', password: 'admin123' },
   { userId: 'STF-201', name: 'Suresh Gupta (Lead Receptionist)', role: 'Receptionist', password: 'rec123' },
+  { userId: 'STF-202', name: 'Priya Sharma (Senior Receptionist)', role: 'Receptionist', password: 'rec123' },
 
   // Nurses (HOSPITABLE_NURSES)
   { userId: 'NUR-01', name: 'Sister Mary Fernandez (Head ICU Nurse)', role: 'Nurse', password: 'nurse123' },

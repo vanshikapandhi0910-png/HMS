@@ -311,7 +311,7 @@ export default function ReceptionistPortal({
     setRedoStack([]);
 
     onShowToast(
-      `✓ Patient ${regName} registered successfully! Generated Patient ID: ${finalPatient.id} (${isOpd ? 'Non-Admitted OPD Check-Up' : 'Admitted IPD'}). Hand this ID to the patient for portal login.`,
+      `✓ Patient ${regName} registered! Patient Account Created — User ID: ${finalPatient.id} | Password: pat123 (${isOpd ? 'OPD Patient' : 'Admitted'}). Hand these login credentials to the patient.`,
       {
         onUndo: actionRecord.undo,
         onRedo: actionRecord.redo,

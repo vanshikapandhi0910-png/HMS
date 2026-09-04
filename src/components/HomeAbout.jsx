@@ -56,10 +56,7 @@ export default function HomeAbout({ stats, onOpenLoginModal, onNavigateServices 
           </div>
 
           <div style={{ display: 'flex', gap: '14px', marginTop: '28px' }}>
-            <button className="btn btn-primary" onClick={onOpenLoginModal}>
-              <Calendar size={16} /> Book OPD Appointment
-            </button>
-            <button className="btn btn-secondary" onClick={onNavigateServices}>
+            <button className="btn btn-primary" onClick={onNavigateServices}>
               <Bed size={16} /> View Room & ICU Availability
             </button>
           </div>

@@ -332,9 +332,10 @@ export const INITIAL_SAMPLE_PATIENTS = [
 ];
 
 export const INITIAL_STAFF_MEMBERS = [
-  { id: "STF-201", name: "Suresh Gupta", role: "Receptionist", dept: "Front Desk & Admissions", salary: 32000, status: "Present" },
-  { id: "STF-202", name: "Sister Mary Fernandez", role: "Nurse", dept: "ICU Unit", salary: 48000, status: "Present" },
-  { id: "STF-203", name: "Nurse Sunita Rao", role: "Nurse", dept: "General Ward", salary: 42000, status: "Present" },
+  { id: "STF-201", name: "Suresh Gupta", role: "Receptionist", dept: "Front Desk & Morning Shift", salary: 32000, status: "Present" },
+  { id: "STF-202", name: "Priya Sharma", role: "Receptionist", dept: "Front Desk & Evening Shift", salary: 31000, status: "Present" },
+  { id: "NUR-01", name: "Sister Mary Fernandez", role: "Nurse", dept: "ICU Unit", salary: 48000, status: "Present" },
+  { id: "NUR-02", name: "Nurse Sunita Rao", role: "Nurse", dept: "General Ward", salary: 42000, status: "Present" },
   { id: "NUR-03", name: "Nurse Priya Nair", role: "Nurse", dept: "Maternity & NICU", salary: 44000, status: "Present" },
   { id: "NUR-04", name: "Nurse David Chen", role: "Nurse", dept: "Operation Theater & Trauma", salary: 46000, status: "Present" },
   { id: "STF-204", name: "Ramesh Pawar", role: "Menial Staff (Janitor)", dept: "Sanitation & Hygiene", salary: 18000, status: "Present" },

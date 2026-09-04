@@ -7,6 +7,7 @@ const ACCOUNT_DIRECTORY = [
   // Admin & Staff
   { id: 'ADM-001', name: 'Dr. Rajesh Gupta (Chief Admin)', role: 'Admin', password: 'admin123' },
   { id: 'STF-201', name: 'Suresh Gupta (Lead Receptionist)', role: 'Receptionist', password: 'rec123' },
+  { id: 'STF-202', name: 'Priya Sharma (Senior Receptionist)', role: 'Receptionist', password: 'rec123' },
 
   // Nurses
   { id: 'NUR-01', name: 'Sister Mary Fernandez (Head ICU Nurse)', role: 'Nurse', password: 'nurse123' },
@@ -38,7 +39,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
   const [role, setRole] = useState('Nurse');
   const [selectedAccountId, setSelectedAccountId] = useState('NUR-01');
   const [userId, setUserId] = useState('NUR-01');
-  const [password, setPassword] = useState('nurse123');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -72,6 +73,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
   const handleRoleChange = (newRole) => {
     setError('');
     setRole(newRole);
+    setPassword('');
     const available = allAccounts.filter(
       (acc) => acc.role.toLowerCase() === newRole.toLowerCase()
     );
@@ -79,16 +81,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
       const defaultAcc = available[0];
       setSelectedAccountId(defaultAcc.id);
       setUserId(defaultAcc.id);
-      setPassword(defaultAcc.password);
     }
   };
 
   const handleAccountSelect = (accId) => {
     setSelectedAccountId(accId);
+    setPassword('');
     const target = allAccounts.find((acc) => acc.id === accId);
     if (target) {
       setUserId(target.id);
-      setPassword(target.password || 'pat123');
     }
   };
 
@@ -167,7 +168,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
               <option value="Receptionist">Employee (Receptionist / Desk & Roster)</option>
               <option value="Nurse">Nurse (ICU, General Ward, NICU, OT Nurses)</option>
               <option value="Doctor">Doctor (Cardiologist, Neurologist, Ortho, etc.)</option>
-              <option value="Patient">Patient (In-Patient / OPD Accounts)</option>
+              <option value="Patient">Patient</option>
             </select>
           </div>
 
@@ -213,12 +214,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, patientsLi
               className="form-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your account password"
               required
             />
           </div>
 
           <div style={{ background: 'rgba(6, 182, 212, 0.08)', padding: '10px 14px', borderRadius: '10px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '20px', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
-            <strong style={{ color: 'var(--accent-cyan)' }}>Demo Credentials Auto-Filled:</strong> Select any specific Nurse (Sister Mary, Nurse Sunita, Nurse Priya, Nurse David) or Doctor (Dr. Arvind, Dr. Meera, Dr. Rajeshwar, etc.) from the dropdown above.
+            <strong style={{ color: 'var(--accent-cyan)' }}>Account Selection:</strong> Select an account from the dropdown to fill your User ID. Enter your account password to log in.
           </div>
 
           {error && (

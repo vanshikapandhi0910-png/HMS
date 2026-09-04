@@ -4,7 +4,6 @@ import {
   Mic, MicOff, Paperclip, AlertTriangle, Plus, Trash2, Save, Share2,
   Calendar, Layers, Edit3, ArrowRight, Sparkles, BookOpen, Clock, Heart, Sliders
 } from 'lucide-react';
-import InteractiveBodyMap from './InteractiveBodyMap';
 import StylusCanvasNotes from './StylusCanvasNotes';
 import SpecialtyRepertoryModal from './SpecialtyRepertoryModal';
 import { PHARMACY_MEDICINES } from '../../data/hospitalData';
@@ -291,11 +290,10 @@ export default function CaseTakingSuite({
         {[
           { id: 'demographics', label: '1. Demographics & Consent', icon: User },
           { id: 'symptoms', label: '2. Symptoms & Multimodal', icon: FileText },
-          { id: 'bodymap', label: '3. Interactive Body Map', icon: Activity },
-          { id: 'ai_cds', label: '4. AI CDS & Repertories', icon: Cpu },
-          { id: 'erx', label: '5. eRx & Care Plan', icon: CheckCircle2 },
-          { id: 'longitudinal', label: '6. Longitudinal Timeline', icon: Clock },
-          { id: 'export', label: '7. EHR Interoperability', icon: Share2 }
+          { id: 'ai_cds', label: '3. AI CDS & Repertories', icon: Cpu },
+          { id: 'erx', label: '4. eRx & Care Plan', icon: CheckCircle2 },
+          { id: 'longitudinal', label: '5. Longitudinal Timeline', icon: Clock },
+          { id: 'export', label: '6. EHR Interoperability', icon: Share2 }
         ].map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -629,11 +627,6 @@ export default function CaseTakingSuite({
             <StylusCanvasNotes initialData={stylusData} onSaveData={setStylusData} readOnly={readOnly} />
           </div>
         </div>
-      )}
-
-      {/* ==================== MODULE 3: INTERACTIVE BODY MAP ==================== */}
-      {activeTab === 'bodymap' && (
-        <InteractiveBodyMap pins={bodyMapPins} onUpdatePins={setBodyMapPins} readOnly={readOnly} />
       )}
 
       {/* ==================== MODULE 4: AI CDS & SPECIALTY REPERTORIES ==================== */}

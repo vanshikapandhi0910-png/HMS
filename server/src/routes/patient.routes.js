@@ -1,5 +1,7 @@
 import { Router } from 'express';
+import bcrypt from 'bcryptjs';
 import Patient from '../models/Patient.js';
+import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
@@ -17,7 +19,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, age, gender, room, doctorAssigned, condition, status } = req.body || {};
+    const { name, age, gender, room, doctorAssigned, condition, status, password } = req.body || {};
     if (!name) return res.status(400).json({ message: 'Patient name is required.' });
 
     const id = `PAT-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -31,7 +33,21 @@ router.post('/', async (req, res) => {
       condition: condition || 'Under Observation',
       status: status || 'Admitted',
     });
-    res.status(201).json(item);
+
+    // Automatically create User credentials account for Patient login
+    const patientPassword = password || 'pat123';
+    const passwordHash = await bcrypt.hash(patientPassword, 10);
+    await User.create({
+      userId: id,
+      name,
+      role: 'Patient',
+      passwordHash,
+    });
+
+    const responseItem = item.toObject ? item.toObject() : { ...item };
+    responseItem.defaultPassword = patientPassword;
+
+    res.status(201).json(responseItem);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
