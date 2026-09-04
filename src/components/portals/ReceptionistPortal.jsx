@@ -147,6 +147,23 @@ export default function ReceptionistPortal({
     );
   };
 
+  // Receptionist Direct Room Availability Toggle (Occupied vs Free/Available)
+  const toggleRoomStatus = async (roomNum) => {
+    const target = roomsList.find(r => r.roomNumber === roomNum);
+    if (!target) return;
+    const nextStatus = target.status === 'Available' ? 'Occupied' : 'Available';
+    const nextPatient = nextStatus === 'Occupied' ? 'Manual Patient Assigned' : '-';
+
+    try {
+      const updated = await roomApi.update(roomNum, { status: nextStatus, patientName: nextPatient });
+      setRoomsList(prev => prev.map(r => r.roomNumber === roomNum ? (updated || { ...r, status: nextStatus, patientName: nextPatient }) : r));
+      onShowToast(`Room ${roomNum} status changed to ${nextStatus === 'Available' ? 'Free / Available' : 'Occupied'}.`);
+    } catch (err) {
+      setRoomsList(prev => prev.map(r => r.roomNumber === roomNum ? { ...r, status: nextStatus, patientName: nextPatient } : r));
+      onShowToast(`Room ${roomNum} status changed to ${nextStatus === 'Available' ? 'Free / Available' : 'Occupied'}.`);
+    }
+  };
+
   // Staff Attendance Status Update (Present, Absent, On Leave)
   const updateStaffAttendance = async (id, newStatus) => {
     const target = staffList.find(s => s.id === id);
@@ -865,10 +882,23 @@ export default function ReceptionistPortal({
       {/* 3. ROOM AVAILABILITY TAB */}
       {activeTab === 'rooms' && (
         <div className="glass-card" style={{ padding: '24px' }}>
-          <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '14px' }}>
-            150-Room Realtime Availability Matrix (General Ward, AC/Non-AC, ICU)
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px', maxHeight: '400px', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <div>
+              <h3 style={{ color: '#fff', fontSize: '1.2rem', margin: 0 }}>
+                150-Room Realtime Availability Matrix (General Ward, AC/Non-AC, ICU)
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: '2px 0 0 0' }}>
+                Click "Mark Occupied" or "Mark Free" on any room to toggle realtime availability status.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <span className="badge badge-teal">Free: {roomsList.filter(r => r.status === 'Available').length}</span>
+              <span className="badge badge-rose">Occupied: {roomsList.filter(r => r.status === 'Occupied').length}</span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '10px', maxHeight: '440px', overflowY: 'auto' }}>
             {roomsList.slice(0, 75).map(room => (
               <div 
                 key={room.roomNumber}
@@ -877,14 +907,28 @@ export default function ReceptionistPortal({
                   border: `1px solid ${room.status === 'Available' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(244, 63, 94, 0.3)'}`,
                   borderRadius: '10px',
                   padding: '10px',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justify: 'space-between'
                 }}
               >
-                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#fff' }}>{room.roomNumber}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{room.type}</div>
-                <span className={`badge ${room.status === 'Available' ? 'badge-teal' : 'badge-rose'}`} style={{ fontSize: '0.65rem', marginTop: '4px' }}>
-                  {room.status}
-                </span>
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#fff' }}>{room.roomNumber}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{room.type}</div>
+                  <span className={`badge ${room.status === 'Available' ? 'badge-teal' : 'badge-rose'}`} style={{ fontSize: '0.65rem', marginTop: '4px' }}>
+                    {room.status}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => toggleRoomStatus(room.roomNumber)}
+                  className={`btn btn-sm ${room.status === 'Available' ? 'btn-primary' : 'btn-danger'}`}
+                  style={{ fontSize: '0.68rem', padding: '4px 6px', marginTop: '8px', width: '100%', borderRadius: '6px' }}
+                >
+                  {room.status === 'Available' ? 'Mark Occupied' : 'Mark Free (Available)'}
+                </button>
               </div>
             ))}
           </div>

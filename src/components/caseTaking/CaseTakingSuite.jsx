@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import StylusCanvasNotes from './StylusCanvasNotes';
 import SpecialtyRepertoryModal from './SpecialtyRepertoryModal';
+import InteractiveBodyMap from './InteractiveBodyMap';
 import { PHARMACY_MEDICINES } from '../../data/hospitalData';
 
 export default function CaseTakingSuite({
@@ -25,6 +26,8 @@ export default function CaseTakingSuite({
       occupation: 'Software Engineer',
       familyHistory: 'Father: CAD / Hypertension; Mother: Type 2 Diabetes',
       lifestyleFactors: 'Sedentary work, 5 cigarettes/day, moderate stress',
+      appetitePattern: 'Normal Appetite (3 Regular Meals/day)',
+      sleepPattern: 'Sound Sleep (7-8 Hours/night)',
       emergencyContact: 'Family Member (+91 98765 00000)',
       consentSigned: true,
       hipaaGdprCompliant: true,
@@ -286,43 +289,50 @@ export default function CaseTakingSuite({
       </div>
 
       {/* Module Navigation Tabs */}
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        {[
+      {(() => {
+        const userSpecialty = currentUser?.specialty || patient?.doctorSpecialty || 'Cardiologist';
+        const isDiagnosticSpecialty = ['pathol', 'radio'].some(s => userSpecialty.toLowerCase().includes(s));
+        const navTabs = [
           { id: 'demographics', label: '1. Demographics & Consent', icon: User },
           { id: 'symptoms', label: '2. Symptoms & Multimodal', icon: FileText },
-          { id: 'ai_cds', label: '3. AI CDS & Repertories', icon: Cpu },
-          { id: 'erx', label: '4. eRx & Care Plan', icon: CheckCircle2 },
-          { id: 'longitudinal', label: '5. Longitudinal Timeline', icon: Clock },
-          { id: 'export', label: '6. EHR Interoperability', icon: Share2 }
-        ].map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                padding: '10px 16px',
-                borderRadius: '12px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: '600',
-                fontSize: '0.84rem',
-                whiteSpace: 'nowrap',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: isActive ? 'var(--accent-teal)' : 'rgba(255,255,255,0.04)',
-                color: isActive ? '#0f172a' : '#cbd5e1',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Icon size={16} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+          ...(!isDiagnosticSpecialty ? [{ id: 'bodymap', label: '3. Interactive Body Map', icon: Activity }] : []),
+          { id: 'ai_cds', label: `${!isDiagnosticSpecialty ? '4' : '3'}. AI CDS & Repertories`, icon: Cpu },
+          { id: 'erx', label: `${!isDiagnosticSpecialty ? '5' : '4'}. eRx & Care Plan`, icon: CheckCircle2 },
+          { id: 'longitudinal', label: `${!isDiagnosticSpecialty ? '6' : '5'}. Longitudinal Timeline`, icon: Clock },
+          { id: 'export', label: `${!isDiagnosticSpecialty ? '7' : '6'}. EHR Interoperability`, icon: Share2 }
+        ];
+
+        return (
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            {navTabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    background: isActive ? 'linear-gradient(135deg, var(--accent-cyan), #3b82f6)' : 'rgba(255,255,255,0.03)',
+                    color: isActive ? '#fff' : 'var(--text-muted)',
+                    border: isActive ? '1px solid var(--accent-cyan)' : '1px solid rgba(255,255,255,0.06)',
+                    padding: '10px 16px',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <Icon size={16} /> {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* ==================== MODULE 1: DEMOGRAPHICS & CONSENT ==================== */}
       {activeTab === 'demographics' && (
@@ -366,6 +376,37 @@ export default function CaseTakingSuite({
                 className="input-field"
                 style={{ width: '100%', background: '#0f172a', color: '#fff', borderRadius: '8px', padding: '8px 12px' }}
               />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+              <div>
+                <label style={{ fontSize: '0.78rem', color: 'var(--accent-teal)', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                  Appetite Pattern (Editable by Doctor)
+                </label>
+                <input
+                  type="text"
+                  value={extendedDemographics.appetitePattern || ''}
+                  onChange={(e) => setExtendedDemographics({ ...extendedDemographics, appetitePattern: e.target.value })}
+                  readOnly={readOnly}
+                  placeholder="e.g. Normal 3 Meals / Anorexic / Reduced"
+                  className="input-field"
+                  style={{ width: '100%', background: '#0f172a', color: '#fff', borderRadius: '8px', padding: '8px 12px' }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.78rem', color: 'var(--accent-teal)', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                  Sleep Pattern (Editable by Doctor)
+                </label>
+                <input
+                  type="text"
+                  value={extendedDemographics.sleepPattern || ''}
+                  onChange={(e) => setExtendedDemographics({ ...extendedDemographics, sleepPattern: e.target.value })}
+                  readOnly={readOnly}
+                  placeholder="e.g. 7-8 Hrs Sound Sleep / Insomnia / Disturbed"
+                  className="input-field"
+                  style={{ width: '100%', background: '#0f172a', color: '#fff', borderRadius: '8px', padding: '8px 12px' }}
+                />
+              </div>
             </div>
 
             <div>
@@ -627,6 +668,16 @@ export default function CaseTakingSuite({
             <StylusCanvasNotes initialData={stylusData} onSaveData={setStylusData} readOnly={readOnly} />
           </div>
         </div>
+      )}
+
+      {/* ==================== MODULE 3: SPECIALTY-SPECIFIC INTERACTIVE BODY MAP ==================== */}
+      {activeTab === 'bodymap' && (
+        <InteractiveBodyMap
+          specialty={currentUser?.specialty || patient?.doctorSpecialty || 'Cardiologist'}
+          pins={bodyMapPins}
+          onUpdatePins={setBodyMapPins}
+          readOnly={readOnly}
+        />
       )}
 
       {/* ==================== MODULE 4: AI CDS & SPECIALTY REPERTORIES ==================== */}

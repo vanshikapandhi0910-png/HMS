@@ -489,41 +489,82 @@ export default function AdminPortal({
         </div>
       )}
 
-      {/* 3. PATIENT NOTICES TAB */}
+      {/* 3. PATIENTS & BROADCAST NOTICES TAB */}
       {activeTab === 'patients' && (
-        <div className="grid-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div className="glass-card" style={{ padding: '24px' }}>
             <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Megaphone color="var(--accent-cyan)" size={20} /> Broadcast Notice to Patients & Staff
+              <Activity color="var(--accent-teal)" size={20} /> Master Patient EHR & Hospital Admission Directory ({patientsList?.length || 0})
             </h3>
-
-            <form onSubmit={handleBroadcastNotice}>
-              <div className="form-group">
-                <label className="form-label">Notice Announcement Text</label>
-                <textarea 
-                  className="form-textarea" 
-                  rows={4} 
-                  placeholder="Enter notice regarding visiting hours, sanitation, or emergency updates..." 
-                  value={noticeText}
-                  onChange={e => setNoticeText(e.target.value)}
-                  required 
-                />
-              </div>
-              <button type="submit" className="btn btn-primary">
-                <Megaphone size={16} /> Broadcast Notice
-              </button>
-            </form>
+            <div className="table-container">
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Name / Details</th>
+                    <th>Assigned Doctor</th>
+                    <th>Room / Ward</th>
+                    <th>Condition</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(patientsList || []).map(pat => (
+                    <tr key={pat.id}>
+                      <td><strong>{pat.id}</strong></td>
+                      <td>
+                        <strong style={{ color: '#fff' }}>{pat.name}</strong>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{pat.age} yrs • {pat.gender}</div>
+                      </td>
+                      <td><span className="badge badge-cyan">{pat.doctorAssigned}</span></td>
+                      <td>{pat.room}</td>
+                      <td>{pat.condition}</td>
+                      <td>
+                        <span className={`badge ${pat.status === 'Admitted' ? 'badge-teal' : pat.status === 'Critical Care' ? 'badge-rose' : 'badge-amber'}`}>
+                          {pat.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="glass-card" style={{ padding: '24px' }}>
-            <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '16px' }}>Active Broadcast Bulletins</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {noticesList.map((note, idx) => (
-                <div key={idx} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '10px', borderLeft: '4px solid var(--accent-cyan)' }}>
-                  <p style={{ color: '#fff', fontSize: '0.9rem' }}>{note}</p>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Broadcasted by Admin Today</span>
+          <div className="grid-2">
+            <div className="glass-card" style={{ padding: '24px' }}>
+              <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Megaphone color="var(--accent-cyan)" size={20} /> Broadcast Notice to Patients & Staff
+              </h3>
+
+              <form onSubmit={handleBroadcastNotice}>
+                <div className="form-group">
+                  <label className="form-label">Notice Announcement Text</label>
+                  <textarea 
+                    className="form-textarea" 
+                    rows={4} 
+                    placeholder="Enter notice regarding visiting hours, sanitation, or emergency updates..." 
+                    value={noticeText}
+                    onChange={e => setNoticeText(e.target.value)}
+                    required 
+                  />
                 </div>
-              ))}
+                <button type="submit" className="btn btn-primary">
+                  <Megaphone size={16} /> Broadcast Notice
+                </button>
+              </form>
+            </div>
+
+            <div className="glass-card" style={{ padding: '24px' }}>
+              <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '16px' }}>Active Broadcast Bulletins</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {noticesList.map((note, idx) => (
+                  <div key={idx} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '10px', borderLeft: '4px solid var(--accent-cyan)' }}>
+                    <p style={{ color: '#fff', fontSize: '0.9rem' }}>{note}</p>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Broadcasted by Admin Today</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
